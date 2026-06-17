@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospección Radiométrica – Geofísica | FCEyN – UNLPam</title>
+<style>
+  :root {
+    --verde-pizarra: #1a3a2e;
+    --verde-medio: #2d6a4f;
+    --verde-claro: #52b788;
+    --verde-muy-claro: #d8f3dc;
+    --ocre: #c77b2a;
+    --ocre-claro: #fdf0e0;
+    --gris-roca: #4a4a48;
+    --gris-claro: #f4f2ee;
+    --blanco: #fafaf8;
+    --texto-principal: #1e1e1c;
+    --texto-secundario: #5a5a58;
+    --borde: #d0ccc4;
+    --correcto: #1a6b3c;
+    --incorrecto: #8b1a1a;
+    --fondo-correcto: #e8f5ec;
+    --fondo-incorrecto: #fbeaea;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--blanco);
+    color: var(--texto-principal);
+    line-height: 1.75;
+  }
+
+  /* ── CABECERA ── */
+  header {
+    background: var(--verde-pizarra);
+    color: #e8f3ec;
+    padding: 2.5rem 3rem 2rem;
+    border-bottom: 4px solid var(--verde-claro);
+  }
+  .header-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    margin-bottom: 0.75rem;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+  header p.subtitulo {
+    font-size: 1rem;
+    color: #a8d5b5;
+    font-style: italic;
+  }
+  .header-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    background: var(--verde-medio);
+    color: #d8f3dc;
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--verde-pizarra);
+    padding: 0 3rem;
+    border-bottom: 1px solid #2d5a3e;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  nav a {
+    display: inline-block;
+    color: #a8d5b5;
+    text-decoration: none;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    padding: 0.65rem 1rem;
+    border-right: 1px solid #2d5a3e;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav a:hover { background: var(--verde-medio); color: #d8f3dc; }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+  /* ── SECCIONES COLAPSABLES ── */
+  .seccion {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .seccion-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.4rem;
+    cursor: pointer;
+    background: var(--gris-claro);
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Georgia', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .seccion-titulo:hover { background: #e8e4dc; }
+  .seccion-titulo.activo { background: var(--verde-pizarra); color: #d8f3dc; }
+  .seccion-numero {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    background: var(--verde-medio);
+    color: #d8f3dc;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-right: 0.8rem;
+    white-space: nowrap;
+  }
+  .seccion-titulo.activo .seccion-numero { background: var(--verde-claro); color: var(--verde-pizarra); }
+  .icono-toggle {
+    font-size: 1rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    color: var(--verde-claro);
+  }
+  .seccion-titulo.activo .icono-toggle { transform: rotate(180deg); }
+  .seccion-titulo:not(.activo) .icono-toggle { color: var(--gris-roca); }
+
+  .seccion-contenido {
+    display: none;
+    padding: 1.75rem 1.75rem 1.5rem;
+    background: white;
+    border-top: 1px solid var(--borde);
+  }
+  .seccion-contenido.visible { display: block; }
+
+  /* ── TIPOGRAFÍA DENTRO DE SECCIONES ── */
+  .seccion-contenido p { margin-bottom: 1rem; font-size: 0.96rem; color: var(--gris-roca); }
+  .seccion-contenido p:last-child { margin-bottom: 0; }
+  .seccion-contenido h3 {
+    font-size: 1rem;
+    color: var(--verde-pizarra);
+    font-weight: 700;
+    margin: 1.5rem 0 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--borde);
+  }
+  .seccion-contenido h3:first-child { margin-top: 0; }
+  .seccion-contenido ul, .seccion-contenido ol {
+    padding-left: 1.4rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--gris-roca);
+  }
+  .seccion-contenido li { margin-bottom: 0.35rem; }
+
+  /* ── CALLOUT CONCEPTUAL ── */
+  .callout {
+    border-left: 4px solid var(--verde-claro);
+    background: var(--verde-muy-claro);
+    padding: 1rem 1.2rem;
+    margin: 1.2rem 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.93rem;
+    color: var(--verde-pizarra);
+  }
+  .callout strong { display: block; font-size: 0.78rem; font-family: 'Courier New', monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--verde-medio); margin-bottom: 0.4rem; }
+
+  .callout-ocre {
+    border-left-color: var(--ocre);
+    background: var(--ocre-claro);
+    color: #4a2d0a;
+  }
+  .callout-ocre strong { color: var(--ocre); }
+
+  /* ── TABLA ── */
+  .tabla-wrapper { overflow-x: auto; margin: 1.2rem 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  th {
+    background: var(--verde-pizarra);
+    color: #d8f3dc;
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  td {
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--borde);
+    color: var(--gris-roca);
+  }
+  tr:nth-child(even) td { background: var(--gris-claro); }
+  tr:hover td { background: var(--verde-muy-claro); }
+  td:first-child { font-weight: 700; color: var(--verde-pizarra); font-style: italic; }
+  .valor-alto { color: #a0320a; font-weight: 700; }
+  .valor-bajo { color: #5a5a58; }
+
+  /* ── MINERALES GRID ── */
+  .minerales-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  .mineral-card {
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    padding: 1rem;
+    background: var(--gris-claro);
+  }
+  .mineral-elemento {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--verde-medio);
+    margin-bottom: 0.3rem;
+  }
+  .mineral-nombre {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    margin-bottom: 0.4rem;
+  }
+  .mineral-uso {
+    font-size: 0.82rem;
+    color: var(--texto-secundario);
+    font-style: italic;
+  }
+
+  /* ── APLICACIONES ── */
+  .aplicaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .aplic-card {
+    border: 1px solid var(--borde);
+    border-top: 3px solid var(--verde-claro);
+    padding: 1rem;
+    background: white;
+    border-radius: 0 0 4px 4px;
+  }
+  .aplic-icono { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .aplic-titulo { font-size: 0.88rem; font-weight: 700; color: var(--verde-pizarra); margin-bottom: 0.4rem; }
+  .aplic-desc { font-size: 0.82rem; color: var(--texto-secundario); line-height: 1.5; }
+
+  /* ── VIDEOS ── */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .video-card {
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+  }
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--verde-pizarra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-thumb-inner {
+    text-align: center;
+    color: #a8d5b5;
+  }
+  .video-play-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(82, 183, 136, 0.25);
+    border: 2px solid var(--verde-claro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+  }
+  .video-play-btn svg { width: 22px; height: 22px; fill: var(--verde-claro); }
+  .video-plataforma {
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #a8d5b5;
+  }
+  .video-info { padding: 0.9rem 1rem; }
+  .video-etiqueta {
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--verde-medio);
+    margin-bottom: 0.3rem;
+  }
+  .video-titulo {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    margin-bottom: 0.3rem;
+    line-height: 1.35;
+  }
+  .video-desc {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    line-height: 1.45;
+    margin-bottom: 0.7rem;
+  }
+  .video-link {
+    display: inline-block;
+    background: var(--verde-pizarra);
+    color: #d8f3dc;
+    text-decoration: none;
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 2px;
+    transition: background 0.15s;
+  }
+  .video-link:hover { background: var(--verde-medio); }
+
+  /* ── QUIZ ── */
+  .quiz-container {
+    margin-top: 1rem;
+  }
+  .quiz-pregunta-bloque {
+    background: var(--gris-claro);
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .quiz-numero {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: var(--verde-medio);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .quiz-pregunta-texto {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    margin-bottom: 0.9rem;
+    line-height: 1.4;
+  }
+  .quiz-opciones { display: flex; flex-direction: column; gap: 0.45rem; }
+  .quiz-opcion {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--borde);
+    border-radius: 3px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--gris-roca);
+    transition: background 0.12s, border-color 0.12s;
+    line-height: 1.45;
+    text-align: left;
+  }
+  .quiz-opcion:hover:not(.bloqueada) { background: var(--verde-muy-claro); border-color: var(--verde-claro); }
+  .quiz-opcion.bloqueada { cursor: default; }
+  .quiz-opcion.correcto { background: var(--fondo-correcto); border-color: var(--correcto); color: var(--correcto); font-weight: 700; }
+  .quiz-opcion.incorrecto { background: var(--fondo-incorrecto); border-color: var(--incorrecto); color: var(--incorrecto); }
+  .quiz-opcion.neutro-bloq { opacity: 0.5; }
+  .quiz-letra {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .quiz-feedback {
+    margin-top: 0.75rem;
+    padding: 0.7rem 1rem;
+    border-radius: 3px;
+    font-size: 0.86rem;
+    display: none;
+    line-height: 1.5;
+  }
+  .quiz-feedback.visible { display: block; }
+  .quiz-feedback.bien { background: var(--fondo-correcto); color: var(--correcto); border-left: 3px solid var(--correcto); }
+  .quiz-feedback.mal { background: var(--fondo-incorrecto); color: var(--incorrecto); border-left: 3px solid var(--incorrecto); }
+
+  .btn-quiz-reset {
+    margin-top: 1rem;
+    background: none;
+    border: 1px solid var(--borde);
+    padding: 6px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--gris-roca);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.12s;
+  }
+  .btn-quiz-reset:hover { background: var(--gris-claro); }
+
+  /* ── ACTIVIDAD TABLA ── */
+  .actividad-box {
+    background: var(--ocre-claro);
+    border: 1px solid #e0c090;
+    border-left: 4px solid var(--ocre);
+    border-radius: 0 4px 4px 0;
+    padding: 1.2rem 1.4rem;
+    margin: 1.2rem 0;
+  }
+  .actividad-titulo {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ocre);
+    margin-bottom: 0.5rem;
+  }
+  .actividad-box p { color: #4a2d0a; font-size: 0.9rem; }
+  .actividad-box ol, .actividad-box ul { color: #4a2d0a; font-size: 0.9rem; }
+
+  /* ── DEBATE ── */
+  .debate-item {
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    background: white;
+    position: relative;
+    padding-left: 3rem;
+  }
+  .debate-num {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--verde-claro);
+  }
+  .debate-q {
+    font-size: 0.93rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    margin-bottom: 0.3rem;
+  }
+  .debate-pista {
+    font-size: 0.82rem;
+    color: var(--texto-secundario);
+    font-style: italic;
+  }
+
+  /* ── CASO PRÁCTICO ── */
+  .caso-card {
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .caso-header {
+    background: var(--verde-pizarra);
+    color: #d8f3dc;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .caso-etiqueta {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--verde-claro);
+    color: var(--verde-pizarra);
+    padding: 2px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .caso-titulo-texto { font-size: 0.95rem; font-weight: 700; }
+  .caso-body { padding: 1.2rem 1.4rem; background: white; }
+  .caso-body p { font-size: 0.9rem; color: var(--gris-roca); margin-bottom: 0.8rem; }
+  .caso-body ol { font-size: 0.9rem; color: var(--gris-roca); padding-left: 1.4rem; }
+  .caso-body li { margin-bottom: 0.4rem; }
+  .dato-roca {
+    display: inline-block;
+    background: var(--gris-claro);
+    border: 1px solid var(--borde);
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin: 2px;
+  }
+
+  /* ── DETECTORES COMPARATIVA ── */
+  .detectores-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 600px) { .detectores-grid { grid-template-columns: 1fr; } }
+  .detector-card {
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    padding: 1.1rem;
+    background: white;
+  }
+  .detector-nombre {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    margin-bottom: 0.25rem;
+  }
+  .detector-formula {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--verde-medio);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+  .detector-filas { display: flex; flex-direction: column; gap: 0.3rem; }
+  .detector-fila {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .det-key { color: var(--texto-secundario); min-width: 100px; flex-shrink: 0; }
+  .det-val { color: var(--gris-roca); }
+  .det-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-family: 'Courier New', monospace;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-top: 0.6rem;
+  }
+  .det-badge.obsoleto { background: #f0e8e0; color: #8b5a2b; }
+  .det-badge.vigente { background: var(--verde-muy-claro); color: var(--verde-pizarra); }
+
+  /* ── DIAGRAMA PENETRACIÓN ── */
+  .diagrama-penetracion {
+    background: var(--gris-claro);
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    padding: 1.2rem;
+    margin: 1.2rem 0;
+    font-size: 0.85rem;
+  }
+  .diagrama-penetracion h4 {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--verde-medio);
+    margin-bottom: 1rem;
+  }
+  .penetracion-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    gap: 0.8rem;
+  }
+  .p-nombre { width: 28px; font-family: 'Courier New', monospace; font-weight: 700; font-size: 1rem; color: var(--verde-pizarra); }
+  .p-barra-outer {
+    flex: 1;
+    height: 22px;
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .p-barra-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .p-barra-alpha { background: #c0392b; width: 8%; }
+  .p-barra-beta  { background: #d4850a; width: 32%; }
+  .p-barra-gamma { background: var(--verde-medio); width: 95%; }
+  .p-desc { min-width: 130px; font-size: 0.78rem; color: var(--texto-secundario); }
+
+  /* ── GLOSARIO ── */
+  .glosario-item {
+    border-bottom: 1px solid var(--borde);
+    padding: 0.7rem 0;
+  }
+  .glosario-item:last-child { border-bottom: none; }
+  .glosario-term {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--verde-pizarra);
+    margin-bottom: 0.2rem;
+  }
+  .glosario-def {
+    font-size: 0.88rem;
+    color: var(--gris-roca);
+  }
+
+  /* ── SCORE ── */
+  .score-display {
+    background: var(--verde-pizarra);
+    color: #d8f3dc;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .score-num { font-size: 1.3rem; font-weight: 700; color: var(--verde-claro); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--verde-pizarra);
+    color: #a8d5b5;
+    padding: 1.5rem 3rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  footer a { color: var(--verde-claro); text-decoration: none; }
+
+  /* ── PROGRESO ── */
+  .progreso-bar {
+    height: 3px;
+    background: var(--borde);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progreso-bar-inner {
+    height: 100%;
+    background: var(--verde-claro);
+    transition: width 0.3s ease;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  /* ── ETIQUETA DE SECCIÓN ── */
+  .tag-tipo {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+  }
+  .tag-teoria { background: var(--verde-muy-claro); color: var(--verde-pizarra); }
+  .tag-actividad { background: #fdf0e0; color: #7a4a10; }
+  .tag-video { background: #e8eaf6; color: #3a3a8a; }
+</style>
+</head>
+<body>
+
+<h2 class="sr-only">Material de clase: Introducción a la Prospección Radiométrica, Geofísica – FCEyN UNLPam. Incluye contenidos teóricos, actividades, videos y autoevaluaciones.</h2>
+
+<div class="progreso-bar"><div class="progreso-bar-inner" id="progreso-bar"></div></div>
+
+<header>
+  <p class="header-meta">Cátedra de Geofísica &nbsp;·&nbsp; Licenciatura en Geología &nbsp;·&nbsp; FCEyN – UNLPam</p>
+  <h1>Introducción al Método Radiométrico</h1>
+  <p class="subtitulo">Prospección Geofísica · 3.º año · Material de clase interactivo</p>
+  <span class="header-badge">Geofísica 2025</span>
+</header>
+
+<nav aria-label="Índice de secciones">
+  <a href="#sec1">Radiactividad</a>
+  <a href="#sec2">Fuentes naturales</a>
+  <a href="#sec3">Minerales</a>
+  <a href="#sec4">El método</a>
+  <a href="#sec5">Detectores</a>
+  <a href="#sec6">Resultados</a>
+  <a href="#sec7">Actividades</a>
+  <a href="#sec8">Videos</a>
+  <a href="#sec9">Glosario</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 1 — CONCEPTOS DE RADIACTIVIDAD
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec1">
+  <button class="seccion-titulo activo" onclick="toggleSeccion(this)" aria-expanded="true">
+    <span><span class="seccion-numero">01</span>¿Qué es la radiactividad? <span class="tag-tipo tag-teoria">Teoría</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido visible">
+
+    <div class="callout">
+      <strong>Concepto clave</strong>
+      Los <strong>isótopos</strong> son átomos de un mismo elemento con igual número atómico pero distinto número másico (distinta cantidad de neutrones). Cuando un isótopo es inestable, libera energía hasta alcanzar una configuración estable: eso es la <strong>radiactividad</strong>.
+    </div>
+
+    <p>Algunos núcleos tienen exceso de energía y se desintegran emitiendo partículas o radiación electromagnética. Este proceso puede ser <em>espontáneo</em> (radiactividad natural) o <em>inducido artificialmente</em>. En geofísica nos interesa exclusivamente la radiactividad natural, que ocurre en las rocas y minerales de la corteza terrestre.</p>
+
+    <h3>Los tres tipos de radiación</h3>
+    <p>No toda la radiación se comporta igual ante la materia. La diferencia fundamental para nosotros es la <strong>capacidad de penetración</strong>:</p>
+
+    <div class="diagrama-penetracion">
+      <h4>Penetración relativa de cada tipo de radiación</h4>
+      <div class="penetracion-row">
+        <div class="p-nombre">α</div>
+        <div class="p-barra-outer">
+          <div class="p-barra-inner p-barra-alpha">α</div>
+        </div>
+        <div class="p-desc">Pocos cm de aire. Detenida por la piel.</div>
+      </div>
+      <div class="penetracion-row">
+        <div class="p-nombre">β</div>
+        <div class="p-barra-outer">
+          <div class="p-barra-inner p-barra-beta">β ─────</div>
+        </div>
+        <div class="p-desc">Metro o más de aire. Detenida por aluminio.</div>
+      </div>
+      <div class="penetracion-row">
+        <div class="p-nombre">γ</div>
+        <div class="p-barra-outer">
+          <div class="p-barra-inner p-barra-gamma">γ ─────────────────────────────────────────────</div>
+        </div>
+        <div class="p-desc">Penetra rocas y suelos. ✔ Usada en prospección.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-ocre">
+      <strong>¿Por qué solo la radiación γ?</strong>
+      Las partículas α y β son absorbidas por espesores mínimos de material: la arcilla, la humedad del suelo o el polvo son suficientes para detenerlas por completo. La radiación γ, al carecer de masa ni carga, puede recorrer decenas de metros en el aire y alcanzar los sensores de un avión o helicóptero volando a 50–100 m de altura.
+    </div>
+
+    <h3>Autoevaluación rápida</h3>
+    <div class="quiz-container" id="quiz-sec1">
+      <div class="score-display" id="score-sec1" style="display:none;">
+        Respuestas correctas: <span class="score-num" id="score-num-sec1">0</span> / 3
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q1">
+        <div class="quiz-numero">Pregunta 1 de 3</div>
+        <p class="quiz-pregunta-texto">¿Qué distingue a los isótopos de un mismo elemento entre sí?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q1','a')"><span class="quiz-letra">A</span> El número atómico (cantidad de protones)</div>
+          <div class="quiz-opcion" onclick="responder('q1','b')"><span class="quiz-letra">B</span> La cantidad de neutrones (número másico diferente)</div>
+          <div class="quiz-opcion" onclick="responder('q1','c')"><span class="quiz-letra">C</span> La cantidad de electrones en la capa de valencia</div>
+          <div class="quiz-opcion" onclick="responder('q1','d')"><span class="quiz-letra">D</span> El estado de oxidación del átomo</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q1"></div>
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q2">
+        <div class="quiz-numero">Pregunta 2 de 3</div>
+        <p class="quiz-pregunta-texto">¿Por qué la prospección radiométrica mide radiación gamma y no partículas alfa o beta?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q2','a')"><span class="quiz-letra">A</span> Porque las partículas α y β son más peligrosas para los equipos</div>
+          <div class="quiz-opcion" onclick="responder('q2','b')"><span class="quiz-letra">B</span> Porque los rayos gamma son los únicos que logran penetrar la capa superficial de suelo y llegar hasta el sensor</div>
+          <div class="quiz-opcion" onclick="responder('q2','c')"><span class="quiz-letra">C</span> Porque α y β no son emitidas por rocas, solo γ</div>
+          <div class="quiz-opcion" onclick="responder('q2','d')"><span class="quiz-letra">D</span> Porque la radiación gamma es la más económica de detectar</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q2"></div>
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q3">
+        <div class="quiz-numero">Pregunta 3 de 3</div>
+        <p class="quiz-pregunta-texto">¿Cuál de los siguientes es un par de isótopos del carbono?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q3','a')"><span class="quiz-letra">A</span> ¹²C y ¹⁴N (carbono y nitrógeno)</div>
+          <div class="quiz-opcion" onclick="responder('q3','b')"><span class="quiz-letra">B</span> ¹²C y ¹⁴C (ambos son carbono, número másico distinto)</div>
+          <div class="quiz-opcion" onclick="responder('q3','c')"><span class="quiz-letra">C</span> ⁴He y ⁴Be (mismo número másico, diferente elemento)</div>
+          <div class="quiz-opcion" onclick="responder('q3','d')"><span class="quiz-letra">D</span> ²³⁵U y ²³⁸Pu (uranio y plutonio)</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q3"></div>
+      </div>
+
+      <button class="btn-quiz-reset" onclick="resetQuiz(['q1','q2','q3'], 'score-sec1', 'score-num-sec1')">↺ Reiniciar preguntas</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 2 — FUENTES NATURALES (K, U, Th)
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec2">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">02</span>Radiactividad natural en rocas <span class="tag-tipo tag-teoria">Teoría</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <p>Aunque existen más de 50 elementos radiactivos en la naturaleza, la señal geofísica que registramos en campo proviene casi exclusivamente de tres: <strong>potasio (K), uranio (U) y torio (Th)</strong>. Son los únicos con concentración e intensidad suficientes para ser medidos con espectrometría gamma desde la superficie o el aire.</p>
+
+    <div class="callout">
+      <strong>¿Por qué solo K, U y Th?</strong>
+      Los demás elementos radiactivos naturales son demasiado escasos y/o emiten radiación gamma con energía demasiado baja para distinguirse del ruido de fondo a distancias de medición prácticas.
+    </div>
+
+    <h3>Cómo se informa cada elemento</h3>
+    <ul>
+      <li><strong>K:</strong> el isótopo radiactivo ⁴⁰K representa el 0,0118% del potasio total en la naturaleza (proporción constante). La estimación es directa y los resultados se expresan en <strong>% K</strong>.</li>
+      <li><strong>U y Th:</strong> la detección es indirecta: se miden los rayos gamma de sus <em>productos hijos</em> en la cadena de desintegración. Los resultados se expresan en <strong>ppm de uranio equivalente (eU)</strong> y <strong>ppm de torio equivalente (eTh)</strong>. El término "equivalente" implica la asunción de equilibrio radiactivo en la cadena de decaimiento.</li>
+    </ul>
+
+    <h3>Concentración media en tipos de roca</h3>
+    <div class="tabla-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo de roca</th>
+            <th>K (%)</th>
+            <th>Th (ppm)</th>
+            <th>U (ppm)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Rocas basálticas</td>
+            <td class="valor-bajo">0,8</td>
+            <td class="valor-bajo">4</td>
+            <td class="valor-bajo">1</td>
+          </tr>
+          <tr>
+            <td>Rocas graníticas</td>
+            <td class="valor-alto">3</td>
+            <td class="valor-alto">12</td>
+            <td class="valor-alto">3</td>
+          </tr>
+          <tr>
+            <td>Areniscas</td>
+            <td>1,1</td>
+            <td class="valor-bajo">1,7</td>
+            <td class="valor-bajo">0,5</td>
+          </tr>
+          <tr>
+            <td>Rocas arcillosas</td>
+            <td>2,7</td>
+            <td class="valor-alto">12</td>
+            <td class="valor-alto">3,7</td>
+          </tr>
+          <tr>
+            <td>Rocas carbonatadas</td>
+            <td class="valor-bajo">0,3</td>
+            <td class="valor-bajo">1,7</td>
+            <td>2,2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.78rem; color:var(--texto-secundario); margin-top:0.3rem;">Fuente: Berini et al., Geotecnia y prospección geofísica, Universidad de Cantabria.</p>
+
+    <div class="actividad-box">
+      <p class="actividad-titulo">✏ Actividad 1 – Interpretación de tabla</p>
+      <p>Observá los datos de la tabla y respondé en grupo:</p>
+      <ol>
+        <li>¿Qué tipo de roca esperarías encontrar asociado a una anomalía radiométrica alta? ¿Y una baja?</li>
+        <li>Si en un relevamiento aéreo detectás una zona con K = 2,8 %, Th = 11 ppm y U = 3,5 ppm, ¿qué litología propondrías como responsable? ¿Con qué incertidumbre?</li>
+        <li>¿Por qué las rocas basálticas tienen señal radiométrica baja? Pensalo desde su origen (magma mantélico vs. cortical).</li>
+      </ol>
+    </div>
+
+    <h3>Distribución por tipo de roca</h3>
+    <ul>
+      <li><strong>Rocas ígneas</strong> (granito, pegmatita, riolita): elementos radiactivos en feldespatos, micas y minerales accesorios (circón, apatita, monacita).</li>
+      <li><strong>Rocas sedimentarias</strong>: las porosas y permeables (conglomerados, arcillas, areniscas) pueden alojar minerales de U y Th supergénicos, generando yacimientos importantes. Los depósitos de fosfatos y carbón merecen atención especial porque los cationes de U y Th se alojan muy bien en sus estructuras.</li>
+      <li><strong>Rocas metamórficas</strong> (mármol, cuarcita, gneis, pizarra): tienden a conservar el contenido radiactivo de las rocas originarias.</li>
+    </ul>
+
+    <h3>Autoevaluación</h3>
+    <div class="quiz-container" id="quiz-sec2">
+      <div class="score-display" id="score-sec2" style="display:none;">
+        Respuestas correctas: <span class="score-num" id="score-num-sec2">0</span> / 2
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q4">
+        <div class="quiz-numero">Pregunta 1 de 2</div>
+        <p class="quiz-pregunta-texto">¿Por qué los resultados de U y Th en espectrometría gamma se expresan como "equivalentes" (eU, eTh)?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q4','a')"><span class="quiz-letra">A</span> Porque se estiman a partir de muestras de laboratorio, no de campo</div>
+          <div class="quiz-opcion" onclick="responder('q4','b')"><span class="quiz-letra">B</span> Porque se mide la radiación gamma de sus productos hijos, asumiendo equilibrio radiactivo en la cadena de decaimiento</div>
+          <div class="quiz-opcion" onclick="responder('q4','c')"><span class="quiz-letra">C</span> Porque los detectores no pueden diferenciar U de Th con precisión absoluta</div>
+          <div class="quiz-opcion" onclick="responder('q4','d')"><span class="quiz-letra">D</span> Porque los resultados se convierten a unidades de potasio equivalente</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q4"></div>
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q5">
+        <div class="quiz-numero">Pregunta 2 de 2</div>
+        <p class="quiz-pregunta-texto">¿En cuál de estos contextos geológicos esperarías la señal radiométrica MÁS BAJA?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q5','a')"><span class="quiz-letra">A</span> Un afloramiento granítico con abundante feldespato potásico</div>
+          <div class="quiz-opcion" onclick="responder('q5','b')"><span class="quiz-letra">B</span> Una arcillita negra rica en materia orgánica</div>
+          <div class="quiz-opcion" onclick="responder('q5','c')"><span class="quiz-letra">C</span> Una colada basáltica de origen mantélico</div>
+          <div class="quiz-opcion" onclick="responder('q5','d')"><span class="quiz-letra">D</span> Una pegmatita con circón abundante</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q5"></div>
+      </div>
+
+      <button class="btn-quiz-reset" onclick="resetQuiz(['q4','q5'], 'score-sec2', 'score-num-sec2')">↺ Reiniciar preguntas</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 3 — MINERALES RADIACTIVOS
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec3">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">03</span>Minerales radiactivos principales <span class="tag-tipo tag-teoria">Teoría</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <p>La señal radiométrica que registra el sensor depende, en última instancia, de qué minerales están presentes en la roca. Los radioelementos pueden ser constituyentes principales del mineral o aparecer en cantidades traza como impurezas en la red cristalina.</p>
+
+    <div class="minerales-grid">
+      <div class="mineral-card">
+        <p class="mineral-elemento">Potasio (K)</p>
+        <p class="mineral-nombre">Silvina (KCl)</p>
+        <p class="mineral-uso">Usada en fertilizantes. Señal de K muy alta.</p>
+      </div>
+      <div class="mineral-card">
+        <p class="mineral-elemento">Potasio (K)</p>
+        <p class="mineral-nombre">Micas (moscovita, biotita, lepidolita, flogopita)</p>
+        <p class="mineral-uso">Industria de aislantes térmicos y eléctricos.</p>
+      </div>
+      <div class="mineral-card">
+        <p class="mineral-elemento">Uranio (U)</p>
+        <p class="mineral-nombre">Uraninita / Pechblenda</p>
+        <p class="mineral-uso">Principal mena de uranio para energía nuclear.</p>
+      </div>
+      <div class="mineral-card">
+        <p class="mineral-elemento">Uranio (U)</p>
+        <p class="mineral-nombre">Autunita, Carnotita, Torbernita</p>
+        <p class="mineral-uso">Menas secundarias (supergénicas) de uranio.</p>
+      </div>
+      <div class="mineral-card">
+        <p class="mineral-elemento">Torio (Th)</p>
+        <p class="mineral-nombre">Monacita</p>
+        <p class="mineral-uso">Mena de Th y tierras raras. Industria metalúrgica y electrónica.</p>
+      </div>
+      <div class="mineral-card">
+        <p class="mineral-elemento">Torio (Th)</p>
+        <p class="mineral-nombre">Torianita / Torita</p>
+        <p class="mineral-uso">Menas de torio. Potencial combustible nuclear.</p>
+      </div>
+    </div>
+
+    <div class="actividad-box">
+      <p class="actividad-titulo">✏ Actividad 2 – Reflexión mineralógica</p>
+      <p>Con lo visto en mineralogía y petrología:</p>
+      <ol>
+        <li>¿En qué tipo de granito esperarías mayor señal de K: uno con feldespato alcalino dominante o uno con plagioclasa sódica? ¿Por qué?</li>
+        <li>¿Qué implicaciones económicas tiene encontrar una anomalía de Th en una zona de rocas metamórficas? ¿Qué mineral sospecharías y qué otros elementos asociados explorarías?</li>
+        <li>La carnotita (mineral de U) es supergénica. ¿En qué tipo de ambiente geológico la buscarías preferentemente? (Pensá en condiciones de oxidación, aridez, etc.)</li>
+      </ol>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 4 — EL MÉTODO RADIOMÉTRICO
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec4">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">04</span>El método radiométrico <span class="tag-tipo tag-teoria">Teoría</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <div class="callout">
+      <strong>Definición</strong>
+      La <strong>radiometría</strong> o <strong>espectrometría gamma</strong> es un método geofísico <em>pasivo</em> que mide la radiactividad natural de las rocas en forma de rayos γ. Es pasivo porque registra energía natural, sin necesitar una fuente artificial de emisión.
+    </div>
+
+    <h3>Condicionante clave</h3>
+    <p>Las emisiones gamma son absorbidas incluso por espesores pequeños de roca: la información que obtenemos corresponde únicamente a los <strong>primeros 30–50 cm de la superficie</strong>. Esto es al mismo tiempo una limitación (no vemos profundidades) y una ventaja (información directa de la litología superficial y de coberturas).</p>
+
+    <p>La humedad y el agua absorben completamente la radiación gamma, por lo tanto <strong>no es conveniente prospectar en días de lluvia</strong>.</p>
+
+    <h3>Modalidades de relevamiento</h3>
+    <ul>
+      <li><strong>Aéreo:</strong> la modalidad más común en exploración mineral. Se realiza desde aviones o helicópteros a 30–100 m de altura. Los sensores son grandes y sensibles. Habitualmente se adquiere simultáneamente con datos magnéticos, con costo adicional mínimo. Para depósitos pequeños se usan helicópteros a baja velocidad.</li>
+      <li><strong>Terrestre:</strong> con instrumentos portátiles o montados en vehículos. Mayor resolución espacial, pero mucho más lento y costoso por área cubierta.</li>
+      <li><strong>En pozos (geofísica de pozo):</strong> los sensores bajan al interior de la perforación y permiten correlacionar estratigrafía entre pozos.</li>
+    </ul>
+
+    <h3>Aplicaciones principales</h3>
+    <div class="aplicaciones-grid">
+      <div class="aplic-card">
+        <div class="aplic-icono">🗺️</div>
+        <div class="aplic-titulo">Cartografía geológica</div>
+        <div class="aplic-desc">Diferentes rocas tienen firma radiactiva distintiva: permite identificar litologías y trazar contactos geológicos a escala regional.</div>
+      </div>
+      <div class="aplic-card">
+        <div class="aplic-icono">⛏️</div>
+        <div class="aplic-titulo">Exploración de minerales</div>
+        <div class="aplic-desc">Búsqueda directa de U, Th y K, y exploración de yacimientos asociados (REE, Au en halo potásico, fosfatos).</div>
+      </div>
+      <div class="aplic-card">
+        <div class="aplic-icono">🔥</div>
+        <div class="aplic-titulo">Zonas de alteración hidrotermal</div>
+        <div class="aplic-desc">Los fluidos hidrotermales redistribuyen K, U y Th de manera anómala: la radiometría puede detectar halos de alteración potásica o uranoífera.</div>
+      </div>
+      <div class="aplic-card">
+        <div class="aplic-icono">🛢️</div>
+        <div class="aplic-titulo">Industria petrolera</div>
+        <div class="aplic-desc">Los registros de rayos gamma en pozo son clave para correlacionar estratigrafía y evaluar litología en pozos de exploración.</div>
+      </div>
+      <div class="aplic-card">
+        <div class="aplic-icono">🌱</div>
+        <div class="aplic-titulo">Estudios de suelos</div>
+        <div class="aplic-desc">Mapeo de tipos de suelo y distribución de regolito para aplicaciones ambientales y agrícolas.</div>
+      </div>
+      <div class="aplic-card">
+        <div class="aplic-icono">📏</div>
+        <div class="aplic-titulo">Correlación estratigráfica</div>
+        <div class="aplic-desc">Permite correlacionar horizontes entre perforaciones y ayuda en la evaluación de depósitos sedimentarios.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-ocre">
+      <strong>Ventajas y limitaciones del método</strong>
+      <ul style="margin-top:0.5rem; padding-left:1.2rem;">
+        <li>✔ Fácil de aplicar y económico en relevamiento aéreo.</li>
+        <li>✔ Lo puede operar una sola persona en campo terrestre.</li>
+        <li>✔ Informacion directamente relacionable con la geología de superficie.</li>
+        <li>✔ Tiene connotación geoquímica: da información sobre composición, no solo estructura.</li>
+        <li>✗ Solo mide los primeros ~50 cm de profundidad.</li>
+        <li>✗ Los resultados son relativos y la interpretación debe ser cuidadosa.</li>
+        <li>✗ Alta sensibilidad a la cobertura superficial y la meteorización.</li>
+        <li>✗ En relevamiento aéreo, cada medición refleja un área grande (no un punto).</li>
+      </ul>
+    </div>
+
+    <h3>Autoevaluación</h3>
+    <div class="quiz-container" id="quiz-sec4">
+      <div class="score-display" id="score-sec4" style="display:none;">
+        Respuestas correctas: <span class="score-num" id="score-num-sec4">0</span> / 2
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q6">
+        <div class="quiz-numero">Pregunta 1 de 2</div>
+        <p class="quiz-pregunta-texto">¿Por qué la radiometría se considera un método geofísico "pasivo"?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q6','a')"><span class="quiz-letra">A</span> Porque no requiere procesamiento de datos posterior</div>
+          <div class="quiz-opcion" onclick="responder('q6','b')"><span class="quiz-letra">B</span> Porque mide una fuente de energía natural existente, sin generar una fuente artificial</div>
+          <div class="quiz-opcion" onclick="responder('q6','c')"><span class="quiz-letra">C</span> Porque los instrumentos no emiten ningún tipo de señal electrónica</div>
+          <div class="quiz-opcion" onclick="responder('q6','d')"><span class="quiz-letra">D</span> Porque se puede hacer sin personal especializado</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q6"></div>
+      </div>
+
+      <div class="quiz-pregunta-bloque" id="q7">
+        <div class="quiz-numero">Pregunta 2 de 2</div>
+        <p class="quiz-pregunta-texto">Un geólogo detecta una fuerte anomalía potásica (K alto) en un mapa radiométrico aéreo. ¿Qué proceso geológico podría explicarla además de la litología granítica?</p>
+        <div class="quiz-opciones">
+          <div class="quiz-opcion" onclick="responder('q7','a')"><span class="quiz-letra">A</span> Alteración propilítica (cloritización)</div>
+          <div class="quiz-opcion" onclick="responder('q7','b')"><span class="quiz-letra">B</span> Alteración potásica asociada a mineralización hidrotermal</div>
+          <div class="quiz-opcion" onclick="responder('q7','c')"><span class="quiz-letra">C</span> Silicificación intensa de la roca encajante</div>
+          <div class="quiz-opcion" onclick="responder('q7','d')"><span class="quiz-letra">D</span> Fracturación tectónica sin fluidos asociados</div>
+        </div>
+        <div class="quiz-feedback" id="fb-q7"></div>
+      </div>
+
+      <button class="btn-quiz-reset" onclick="resetQuiz(['q6','q7'], 'score-sec4', 'score-num-sec4')">↺ Reiniciar preguntas</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 5 — DETECTORES
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec5">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">05</span>Instrumentos de medición <span class="tag-tipo tag-teoria">Teoría</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <p>Los instrumentos de prospección radiométrica registran el número de emisiones detectadas por unidad de tiempo (cuentas por minuto, cpm). Existen dos tipos principales:</p>
+
+    <div class="detectores-grid">
+      <div class="detector-card">
+        <p class="detector-nombre">Contador Geiger-Müller</p>
+        <p class="detector-formula">Partículas β → cuentas por minuto</p>
+        <div class="detector-filas">
+          <div class="detector-fila"><span class="det-key">Qué detecta</span><span class="det-val">Radiación beta como bloque (sin discriminar)</span></div>
+          <div class="detector-fila"><span class="det-key">Salida</span><span class="det-val">Zumbido variable + cuentas totales</span></div>
+          <div class="detector-fila"><span class="det-key">Limitación</span><span class="det-val">No diferencia K, U o Th entre sí</span></div>
+          <div class="detector-fila"><span class="det-key">Uso actual</span><span class="det-val">Solo exploración terrestre; casi obsoleto en geofísica</span></div>
+        </div>
+        <span class="det-badge obsoleto">En desuso en geofísica</span>
+      </div>
+      <div class="detector-card">
+        <p class="detector-nombre">Escintilómetro / Espectrómetro gamma</p>
+        <p class="detector-formula">Fotones γ → luz → electrones → cuentas</p>
+        <div class="detector-filas">
+          <div class="detector-fila"><span class="det-key">Qué detecta</span><span class="det-val">Rayos gamma con discriminación espectral</span></div>
+          <div class="detector-fila"><span class="det-key">Salida</span><span class="det-val">% K, ppm eU, ppm eTh + conteo total</span></div>
+          <div class="detector-fila"><span class="det-key">Ventaja</span><span class="det-val">Mayor sensibilidad. Identifica cada elemento por separado</span></div>
+          <div class="detector-fila"><span class="det-key">Uso</span><span class="det-val">Prospección aérea y terrestre. Estándar actual.</span></div>
+        </div>
+        <span class="det-badge vigente">Estándar actual</span>
+      </div>
+    </div>
+
+    <h3>Relevamiento aéreo: parámetros operativos típicos</h3>
+    <ul>
+      <li>Altitud de vuelo: <strong>30–100 m</strong> sobre el terreno (sigue el relieve).</li>
+      <li>Para áreas pequeñas y detalladas: <strong>helicóptero</strong> (baja velocidad, mayor resolución).</li>
+      <li>Para regiones extensas: <strong>avión de ala fija</strong> (mayor velocidad y cubrimiento).</li>
+      <li>Los datos magnéticos suelen adquirirse <strong>simultáneamente</strong> (costo adicional mínimo).</li>
+      <li>Separación entre líneas de vuelo: 25–400 m según objetivo.</li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 6 — RESULTADOS E INTERPRETACIÓN
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec6">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">06</span>Resultados e interpretación <span class="tag-tipo tag-teoria">Teoría</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <p>El análisis radiométrico es menos complejo que el de otros métodos geofísicos, aunque los altos niveles de ruido debidos a la cobertura superficial y deficiencias en la corrección topográfica pueden dificultarlo. Por eso se recomienda siempre una <strong>interpretación integrada</strong> con otros conjuntos de datos.</p>
+
+    <h3>Formatos de presentación de datos</h3>
+    <ul>
+      <li><strong>Mapas de isoconcentración:</strong> muestran la distribución de K (%), eU (ppm) y eTh (ppm) en el área relevada. Permiten correlacionar con la cartografía geológica.</li>
+      <li><strong>Mapas de relaciones:</strong> cocientes como Th/K o U/Th resaltan zonas de alteración que podrían no ser evidentes en los mapas individuales.</li>
+      <li><strong>Diagramas ternarios K-U-Th:</strong> permiten clasificar litologías y detectar mezclas.</li>
+      <li><strong>Perfiles radiométricos:</strong> sección transversal de la señal sobre un transecto, útil para correlacionar con perforaciones o estructuras geológicas conocidas.</li>
+    </ul>
+
+    <div class="callout callout-ocre">
+      <strong>Ejemplo clásico de interpretación</strong>
+      En una zona con mineralización de uranio, el perfil de radiometría terrestre muestra una anomalía de eU bien localizada, que coincide espacialmente con una anomalía magnética. Dos perforaciones posteriores confirman que la fuente es pitchblenda (UO₂) junto a magnetita, en hospedante cuarcítico-arcilloso, exactamente debajo del máximo de ambas anomalías.
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 7 — ACTIVIDADES
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec7">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">07</span>Casos prácticos y debate <span class="tag-tipo tag-actividad">Actividades</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <h3>Casos prácticos para resolver en clase</h3>
+
+    <div class="caso-card">
+      <div class="caso-header">
+        <span class="caso-etiqueta">Caso A</span>
+        <span class="caso-titulo-texto">Exploración en un batolito granítico, La Pampa</span>
+      </div>
+      <div class="caso-body">
+        <p>Una empresa minera realiza un relevamiento aéreo radiométrico sobre un sector de batolito granítico en la provincia de La Pampa. El mapa resultante muestra los siguientes valores promedio en tres zonas:</p>
+        <p>
+          <strong>Zona 1:</strong> <span class="dato-roca">K = 3,2 %</span> <span class="dato-roca">eU = 3,8 ppm</span> <span class="dato-roca">eTh = 13 ppm</span><br>
+          <strong>Zona 2:</strong> <span class="dato-roca">K = 1,8 %</span> <span class="dato-roca">eU = 8,5 ppm</span> <span class="dato-roca">eTh = 4 ppm</span><br>
+          <strong>Zona 3:</strong> <span class="dato-roca">K = 0,5 %</span> <span class="dato-roca">eU = 0,8 ppm</span> <span class="dato-roca">eTh = 2 ppm</span>
+        </p>
+        <ol>
+          <li>¿Cuál de las tres zonas corresponde mejor al granito "normal"? ¿Cuál parece anómala y por qué?</li>
+          <li>La Zona 2 tiene eU muy alto con Th y K bajos. ¿Qué proceso podría enriquecer selectivamente en uranio sin enriquecer en K ni Th?</li>
+          <li>La Zona 3 muestra valores muy bajos en todo. ¿Podría indicar una litología diferente dentro del batolito, o algo relacionado con la cobertura superficial?</li>
+          <li>Si tuvieras que seleccionar <strong>una sola zona para perforar</strong> y solo tenés presupuesto para 3 sondeos, ¿cuál elegirías y por qué?</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <div class="caso-header">
+        <span class="caso-etiqueta">Caso B</span>
+        <span class="caso-titulo-texto">Perfil de suelo en zona de cubierta sedimentaria</span>
+      </div>
+      <div class="caso-body">
+        <p>Un equipo hace un relevamiento radiométrico terrestre en una llanura cubierta por sedimentos finos. El valor promedio medido es <span class="dato-roca">K = 1,5 %</span> <span class="dato-roca">eU = 2 ppm</span> <span class="dato-roca">eTh = 8 ppm</span>. Sin embargo, el día siguiente, después de una lluvia, los valores caen a la mitad.</p>
+        <ol>
+          <li>¿Por qué la lluvia afecta la medición radiométrica? ¿Es un efecto real o un artefacto?</li>
+          <li>¿Cómo deberías corregir o evitar este efecto en el diseño del relevamiento?</li>
+          <li>¿Qué dice este patrón sobre la profundidad de información que proporciona el método?</li>
+        </ol>
+      </div>
+    </div>
+
+    <h3>Preguntas de debate para la clase</h3>
+
+    <div class="debate-item">
+      <span class="debate-num">?1</span>
+      <p class="debate-q">¿En qué se parece y en qué se diferencia la radiometría de la geoquímica tradicional?</p>
+      <p class="debate-pista">Pista: pensá en la escala de muestreo, el tipo de información obtenida y la invasividad del método.</p>
+    </div>
+
+    <div class="debate-item">
+      <span class="debate-num">?2</span>
+      <p class="debate-q">¿Por qué decimos que la radiometría tiene "connotación geoquímica" aunque sea un método geofísico?</p>
+      <p class="debate-pista">Pista: compará con la sísmica o la gravimetría, que dan información de estructura pero no de composición.</p>
+    </div>
+
+    <div class="debate-item">
+      <span class="debate-num">?3</span>
+      <p class="debate-q">Si un mapa radiométrico aéreo muestra una anomalía positiva de K en una zona cubierta por arcillas, ¿cómo distinguís si la anomalía viene del basamento o de la propia arcilla?</p>
+      <p class="debate-pista">Pista: considerá la profundidad de información del método y la necesidad de integrar otros datos.</p>
+    </div>
+
+    <div class="debate-item">
+      <span class="debate-num">?4</span>
+      <p class="debate-q">La espectrometría gamma aérea se usa hoy para mapear suelos, identificar contaminación ambiental y hasta apoyar estudios agrícolas. ¿Qué ventajas aporta frente a los métodos tradicionales en esos contextos no mineros?</p>
+      <p class="debate-pista">Pista: pensá en velocidad de adquisición, cobertura areal y costo por kilómetro cuadrado.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 8 — VIDEOS
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec8">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">08</span>Videos recomendados <span class="tag-tipo tag-video">Multimedia</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <p>Selección de videos cortos y accesibles, ordenados del más introductorio al más aplicado. Ideales para ver antes o durante la clase.</p>
+
+    <div class="video-grid">
+
+      <div class="video-card">
+        <div class="video-thumb">
+          <div class="video-thumb-inner">
+            <div class="video-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <p class="video-plataforma">YouTube</p>
+          </div>
+        </div>
+        <div class="video-info">
+          <p class="video-etiqueta">Introducción · ~8 min</p>
+          <p class="video-titulo">¿Qué es la radiactividad? – BBC Mundo</p>
+          <p class="video-desc">Explicación clara y visual de qué es la radiactividad, cómo nos afecta y cómo cambió nuestras vidas. Buen punto de partida para estudiantes sin base previa.</p>
+          <a class="video-link" href="https://www.youtube.com/watch?v=7w3_qcC928E" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <div class="video-thumb">
+          <div class="video-thumb-inner">
+            <div class="video-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <p class="video-plataforma">YouTube</p>
+          </div>
+        </div>
+        <div class="video-info">
+          <p class="video-etiqueta">Conceptual · ~10 min</p>
+          <p class="video-titulo">Radiactividad – explicación sencilla ☣️</p>
+          <p class="video-desc">Aborda isótopos, tipos de radiación y desintegración nuclear de manera visual y accesible. Ideal para repasar antes de la sección 1 de este material.</p>
+          <a class="video-link" href="https://www.youtube.com/watch?v=FyE6ClxJ-LQ" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <div class="video-thumb">
+          <div class="video-thumb-inner">
+            <div class="video-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <p class="video-plataforma">YouTube · UNT</p>
+          </div>
+        </div>
+        <div class="video-info">
+          <p class="video-etiqueta">Técnico · ~15 min</p>
+          <p class="video-titulo">Espectrometría gamma – radioisótopos (UNT)</p>
+          <p class="video-desc">Docentes de la Universidad Nacional de Tucumán explican qué son los radioisótopos y cómo funciona un detector gamma. Con simulación virtual. Muy recomendable.</p>
+          <a class="video-link" href="https://www.youtube.com/watch?v=IEO9WGlihwY" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <div class="video-thumb">
+          <div class="video-thumb-inner">
+            <div class="video-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <p class="video-plataforma">YouTube</p>
+          </div>
+        </div>
+        <div class="video-info">
+          <p class="video-etiqueta">Prospección · ~12 min</p>
+          <p class="video-titulo">Prospección geofísica – introducción al método</p>
+          <p class="video-desc">Panorama de los métodos geofísicos de exploración, incluyendo radiometría. Contextualiza el método dentro del conjunto de herramientas del geólogo.</p>
+          <a class="video-link" href="https://www.youtube.com/watch?v=zTuu1UPtpNY" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <div class="video-thumb">
+          <div class="video-thumb-inner">
+            <div class="video-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <p class="video-plataforma">YouTube · Aragón TV</p>
+          </div>
+        </div>
+        <div class="video-info">
+          <p class="video-etiqueta">Divulgación · ~5 min</p>
+          <p class="video-titulo">¿Qué es la radiactividad? – En ruta con la ciencia</p>
+          <p class="video-desc">Breve y dinámico. Buen cierre para la clase: desmitifica la radiactividad y la conecta con el mundo cotidiano. Apto para generar debate.</p>
+          <a class="video-link" href="https://www.youtube.com/watch?v=USDLwPKpNxs" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <div class="video-thumb">
+          <div class="video-thumb-inner">
+            <div class="video-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <p class="video-plataforma">YouTube</p>
+          </div>
+        </div>
+        <div class="video-info">
+          <p class="video-etiqueta">Técnico · ~20 min</p>
+          <p class="video-titulo">Espectrometría Gamma – aplicación en geología (en español)</p>
+          <p class="video-desc">Clase técnica sobre el uso de la espectrometría gamma en geología aplicada. Más detallada que los anteriores, para quienes quieran profundizar después de la clase.</p>
+          <a class="video-link" href="https://www.youtube.com/watch?v=EPmeVFr-7AQ" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN 9 — GLOSARIO
+═══════════════════════════════════════════ -->
+<div class="seccion" id="sec9">
+  <button class="seccion-titulo" onclick="toggleSeccion(this)" aria-expanded="false">
+    <span><span class="seccion-numero">09</span>Glosario esencial <span class="tag-tipo tag-teoria">Referencia</span></span>
+    <span class="icono-toggle">▼</span>
+  </button>
+  <div class="seccion-contenido">
+
+    <div class="glosario-item">
+      <p class="glosario-term">Isótopo</p>
+      <p class="glosario-def">Átomo de un elemento con igual número atómico (mismos protones) pero distinto número de neutrones. Ejemplo: ¹²C y ¹⁴C.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Radiactividad</p>
+      <p class="glosario-def">Propiedad de ciertos núcleos inestables de emitir partículas o energía (radiación) hasta alcanzar una configuración estable.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Radiación gamma (γ)</p>
+      <p class="glosario-def">Radiación electromagnética de muy alta energía y corta longitud de onda, sin masa ni carga. Es la única con capacidad de penetración suficiente para usarse en prospección radiométrica.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">eU / eTh (uranio/torio equivalente)</p>
+      <p class="glosario-def">Concentración de U o Th estimada indirectamente a través de la radiación gamma emitida por sus productos hijos, asumiendo equilibrio radiactivo en la cadena de desintegración.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Escintilómetro / Espectrómetro gamma</p>
+      <p class="glosario-def">Instrumento que detecta fotones gamma y los convierte en señal eléctrica, permitiendo discriminar la contribución de K, U y Th por separado.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Método pasivo (geofísica)</p>
+      <p class="glosario-def">Método geofísico que mide un campo de energía natural sin necesitar una fuente artificial. La radiometría, la magnetometría y la gravimetría son métodos pasivos.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Equilibrio radiactivo</p>
+      <p class="glosario-def">Condición en la que la tasa de producción de cada producto hijo en una cadena de desintegración es igual a su tasa de desintegración, de modo que la composición de la cadena permanece estable en el tiempo.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Alteración potásica</p>
+      <p class="glosario-def">Proceso hidrotermal que introduce potasio en la roca encajante (como feldespato potásico o biotita secundaria). Genera anomalías de K en mapas radiométricos y frecuentemente se asocia a mineralización de Au o Cu-Mo porfírico.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Regolito</p>
+      <p class="glosario-def">Capa de material fragmentado y alterado que cubre el basamento rocoso. La radiometría es particularmente sensible al regolito porque solo mide los primeros 30–50 cm de la superficie.</p>
+    </div>
+    <div class="glosario-item">
+      <p class="glosario-term">Anomalía radiométrica</p>
+      <p class="glosario-def">Zona donde los valores de K, eU o eTh se desvían significativamente del fondo regional. Puede indicar cambios litológicos, alteración, mineralización o simplemente variaciones en la cobertura superficial.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BIBLIOGRAFÍA
+═══════════════════════════════════════════ -->
+<div style="margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--borde);">
+  <p style="font-family:'Courier New',monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--verde-medio); margin-bottom:0.8rem;">Bibliografía</p>
+  <ul style="font-size:0.83rem; color:var(--texto-secundario); line-height:1.7; padding-left:1.4rem; list-style:disc;">
+    <li>Berini et al. <em>Geotecnia y prospección geofísica</em>, Tema 8. Universidad de Cantabria. Licencia CC BY-NC-SA 4.0.</li>
+    <li>Chelotti L. et al., 2017. Cátedra de Geofísica Aplicada, UNPSJB, Chubut. Tema 9: Prospección Radiométrica.</li>
+    <li>Dentith M. y Mudge S.T., 2014. <em>Geophysics for the Mineral Exploration Geoscientist</em>. Cambridge University Press.</li>
+    <li>Peñalva G., 2004. <em>Aplicación de la espectrometría de rayos gamma para la identificación de alteración hidrotermal en las vulcanitas ácidas jurásicas del sector central del Macizo del Deseado</em>. SEGEMAR, Buenos Aires.</li>
+  </ul>
+</div>
+
+</main>
+
+<footer>
+  <span>Cátedra de Geofísica · FCEyN – UNLPam · Licenciatura en Geología</span>
+  <span>Material actualizado 2025</span>
+</footer>
+
+<script>
+const respuestasCorrectas = {
+  q1: 'b', q2: 'b', q3: 'b',
+  q4: 'b', q5: 'c',
+  q6: 'b', q7: 'b'
+};
+
+const feedbacks = {
+  q1: {
+    b: '✔ Correcto. Los isótopos comparten el mismo número atómico (misma cantidad de protones, mismo elemento), pero difieren en la cantidad de neutrones, lo que cambia su número másico.',
+    other: '✗ No es correcto. Los isótopos son del mismo elemento (mismo número atómico = mismos protones). Lo que varía entre ellos es la cantidad de neutrones, es decir, el número másico.'
+  },
+  q2: {
+    b: '✔ Correcto. Las partículas α y β se absorben en espesores mínimos de material (incluso la humedad del suelo las detiene). Solo los rayos γ, sin masa ni carga, tienen la penetración necesaria para llegar hasta los detectores en superficie o en vuelo.',
+    other: '✗ Incorrecto. La razón es física: α y β son absorbidas por la primera capa de suelo o roca. Solo γ logra penetrar lo suficiente para ser registrada desde distancia.'
+  },
+  q3: {
+    b: '✔ Correcto. ¹²C y ¹⁴C son isótopos del carbono: mismo número atómico (6 protones), pero diferente número másico (12 y 14 neutrones respectivamente). El ¹⁴C es el isótopo radiactivo usado en datación.',
+    other: '✗ Incorrecto. Los isótopos son átomos del mismo elemento (mismos protones, diferente número de neutrones). Las opciones incorrectas mezclan elementos distintos o usan combinaciones que no corresponden a isótopos reales del mismo elemento.'
+  },
+  q4: {
+    b: '✔ Correcto. El U y el Th emiten poca radiación gamma directamente; la mayor parte viene de sus "productos hijos" en la cadena de desintegración. Si la cadena está en equilibrio, la señal de esos productos es proporcional a la cantidad original de U o Th. De ahí el término "equivalente".',
+    other: '✗ Incorrecto. La razón es que se mide indirectamente la radiación de los productos hijos, asumiendo equilibrio radiactivo. Si ese equilibrio no se cumple (p.ej. por movilización geoquímica reciente), la estimación puede fallar.'
+  },
+  q5: {
+    c: '✔ Correcto. Las rocas basálticas tienen origen mantélico y son pobres en K, U y Th (valores de ~0,8% K, 4 ppm Th y 1 ppm U). En contraste, los granitos, arcillitas y pegmatitas tienen señales mucho más altas.',
+    other: '✗ Incorrecto. Los basaltos de origen mantélico son sistemáticamente los más pobres en radioelementos entre las rocas comunes. Los granitos, micas y arcillitas tienen concentraciones mucho mayores de K, U y Th.'
+  },
+  q6: {
+    b: '✔ Correcto. Un método geofísico pasivo mide la energía que ya existe en la naturaleza, sin necesitar generarla artificialmente. La radiometría, la magnetometría y la gravimetría son ejemplos de métodos pasivos.',
+    other: '✗ Incorrecto. La diferencia entre método activo y pasivo se refiere a la fuente de energía: los pasivos (radiometría, magnética, gravimetría) miden campos naturales; los activos (sísmica, eléctrica) generan una señal propia.'
+  },
+  q7: {
+    b: '✔ Correcto. La alteración potásica (feldespato potásico secundario, biotita de alteración) es uno de los halos más comunes en sistemas hidrotermales de tipo porfírico (Au-Cu) y epitermales. Genera anomalías de K que pueden ser muy similares a las de un granito, pero la distribución espacial y la asociación con otros indicadores permiten diferenciarlas.',
+    other: '✗ Incorrecto. La alteración propilítica (clorita, epidoto) y la silicificación no enriquecen en K. La fracturación sin fluidos tampoco redistribuye radioelementos. La alteración potásica hidrotermal es el proceso clave que genera anomalías de K en contextos no ígneos.'
+  }
+};
+
+const estadoQuiz = {};
+
+function responder(idPregunta, opcionElegida) {
+  if (estadoQuiz[idPregunta]) return;
+
+  const bloque = document.getElementById(idPregunta);
+  const opciones = bloque.querySelectorAll('.quiz-opcion');
+  const fb = document.getElementById('fb-' + idPregunta);
+  const correcta = respuestasCorrectas[idPregunta];
+  const esCorrecto = opcionElegida === correcta;
+
+  estadoQuiz[idPregunta] = { correcta: esCorrecto };
+
+  const letras = ['a','b','c','d'];
+  opciones.forEach((op, i) => {
+    op.classList.add('bloqueada');
+    const letra = letras[i];
+    if (letra === correcta) {
+      op.classList.add('correcto');
+    } else if (letra === opcionElegida && !esCorrecto) {
+      op.classList.add('incorrecto');
+    } else {
+      op.classList.add('neutro-bloq');
+    }
+  });
+
+  fb.classList.add('visible');
+  if (esCorrecto) {
+    fb.classList.add('bien');
+    fb.textContent = feedbacks[idPregunta].b;
+  } else {
+    fb.classList.add('mal');
+    fb.textContent = feedbacks[idPregunta].other;
+  }
+
+  actualizarScore();
+}
+
+function actualizarScore() {
+  const quizSets = {
+    'score-sec1': ['q1','q2','q3'],
+    'score-sec2': ['q4','q5'],
+    'score-sec4': ['q6','q7']
+  };
+
+  for (const [scoreId, preguntas] of Object.entries(quizSets)) {
+    const respondidas = preguntas.filter(q => estadoQuiz[q]);
+    if (respondidas.length === 0) continue;
+    const correctas = respondidas.filter(q => estadoQuiz[q].correcta).length;
+    const scoreEl = document.getElementById(scoreId);
+    const numEl = document.getElementById(scoreId.replace('score-', 'score-num-'));
+    scoreEl.style.display = 'inline-flex';
+    numEl.textContent = correctas;
+  }
+}
+
+function resetQuiz(preguntas, scoreId, scoreNumId) {
+  preguntas.forEach(id => {
+    delete estadoQuiz[id];
+    const bloque = document.getElementById(id);
+    const opciones = bloque.querySelectorAll('.quiz-opcion');
+    opciones.forEach(op => {
+      op.classList.remove('bloqueada','correcto','incorrecto','neutro-bloq');
+    });
+    const fb = document.getElementById('fb-' + id);
+    fb.classList.remove('visible','bien','mal');
+    fb.textContent = '';
+  });
+  const scoreEl = document.getElementById(scoreId);
+  scoreEl.style.display = 'none';
+}
+
+function toggleSeccion(btn) {
+  const contenido = btn.nextElementSibling;
+  const abierto = contenido.classList.contains('visible');
+  contenido.classList.toggle('visible', !abierto);
+  btn.classList.toggle('activo', !abierto);
+  btn.setAttribute('aria-expanded', String(!abierto));
+}
+
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  document.getElementById('progreso-bar').style.width = pct + '%';
+});
+</script>
+
+</body>
+</html>
